@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <script type="application/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/popup.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/popup.css" />
+</head>
+
+<body>
+  <div style="margin-top: 10px">
+    <!-- <a class="btn btn-success" target="_blank" href="https://www.alimama.com/member/login.htm?forward=https://www.taobao.com">登录淘宝会员</a> -->
+    <!-- <a class="btn btn-success" target="_blank" href="https://we.taobao.com/">登录达人创作平台</a> -->
+    <a class="btn btn-success" target="_blank" id="ck" href="javascript:;">参谋智能回填</a>
+    <div class="alert alert-danger hidden" role="alert">
+      插件不是最新版本，点击<a href="" target="_blank">此处</a>下载最新插件
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

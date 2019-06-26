@@ -1,0 +1,71 @@
+$(function() {
+  $("body").prepend("<button id='btn_business'>uuuuuu</button>")
+  let _href = location.href;
+  let tk;
+  // if (_href.includes('page/datacount/sycm.html')) {
+  if (true) {
+
+    const triggerFn = () => {
+      let triggerBtn = $("#btn_business");
+
+      if (triggerBtn) {
+        triggerBtn.on("click", () => {
+          // let shopIds = $("#search_shopId").val();
+          let token = $("#token").val();
+          tk = token;
+          // if (!shopIds || shopIds.length < 1) {
+          //   alert('请先选择店铺');
+          //   return;
+          // }
+          chrome.runtime.sendMessage({
+            greeting: "business",
+            tk: token,
+            // shopIds: shopIds
+          });
+        })
+      }
+    }
+    triggerFn();
+
+
+    //监听事件
+    chrome.extension.onRequest.addListener(
+      function(request, sender, sendResponse) {
+        if (request.greeting == "showRuning") {
+          if (!$('#crx-cer-progressing').length) {
+            $("body").append('<div id="crx-cer-progressing" style="position:absolute; background:rgba(120,120,120,.2); right:50px; top:10px;  border:1px solid #f50; padding:5px 15px;">正在回填' + request.content + '，请稍候。。。</div>')
+          } else {
+            $("#crx-cer-progressing").text('正在回填' + request.content + '，请稍候。。。')
+          }
+        } else if (request.greeting == 'fetchError') {
+          $("#crx-cer-progressing").html('获取数据出错，请重试！');
+        } else if (request.greeting == "errorTips") {
+          alert(request.message)
+        } else if (request.greeting == 'turnPage') {
+          chrome.runtime.sendMessage({
+            greeting: "business",
+            tk
+          });
+        } else if (request.greeting == 'finish') {
+          $("#crx-cer-progressing").html('数据回填已经完成！');
+        }
+
+      });
+
+  }
+  // const triggerBtn = () => {
+  //   let btn = $('<button id="btn_business">回填参谋数据</button>');
+  //   $("body").prepend(btn)
+  // }
+  // triggerBtn();
+
+  // if (href.includes('login.html')) return;
+
+
+
+
+
+  return;
+
+
+})

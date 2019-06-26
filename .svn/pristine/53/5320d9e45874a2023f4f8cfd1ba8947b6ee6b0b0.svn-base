@@ -1,0 +1,175 @@
+Index: manifest.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- manifest.json	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ manifest.json	(revision )
+@@ -29,7 +29,7 @@
+   "content_scripts": [
+     {
+       "matches": ["https://*.baidu.com/*","https://*.taobao.com/*"],
+-      "js": ["js/jquery.min.js", "js/checkPlug.js"]
++      "js": ["js/jquery.min.js", "js/content.js"]
+     }
+   ]
+ }
+Index: js/popup.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- js/popup.js	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ js/popup.js	(revision )
+@@ -1,32 +1,15 @@
+ $(function(){
+-  chrome.runtime.sendMessage({type: "GET_GLOBAL"}, function(response) {
+-      const global = response.data
+-      $.ajax({
+-        url:global.dataUrl + '/datacount/checkVersion.wb',
+-        data:{version:global.version, token:global.token},
+-        dataType:'json'
+-      }).done(function(res){
+-        if(!res.result) {
+-          $.ajax({
+-            url:global.dataUrl + '/datacount/getVersionDownload.wb',
+-            data:{token:global.token},
+-            dataType:'json'
+-          }).done(function(res){
+-            if(res.status == 0) {
+-              $('.alert-danger a').attr('href',res.result)
+-              $('.alert-danger').removeClass('hidden')
+-            }
+-          }).fail(function(){
+-            $('.alert-danger').html('无法获取插件更新地址')
+-            $('.alert-danger').removeClass('hidden')
+-          })
+-
+-        } else {
+-          $('.alert-danger').addClass('hidden')
+-        }
+-      }).fail(function(){
+-        $('.alert-danger').html('无法获取插件当前版本')
+-        $('.alert-danger').removeClass('hidden')
+-      })
+-  });
+-})
++    $("#ck").on("click",e => {
++        alert('id=ck');
++        var bg = chrome.extension.getBackgroundPage();
++        console.log(bg);
++        alert(bg.toString());
++        bg.kk();
++    })
++    // 调用后台JS
++    $('#ck').click(e => {
++        var bg = chrome.extension.getBackgroundPage();
++        bg.testBackground();
++    });
++
++})
+\ No newline at end of file
+Index: src/setPlugCookie.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/setPlugCookie.js	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ src/setPlugCookie.js	(revision )
+@@ -3,6 +3,11 @@
+ 
+ const moli_host = 'http://molitest.willbe.net.cn/editor';
+ 
++function setBegin(){
++    alert('kllssl')
++    console.log('kkkkkk by popup')
++}
++
+ chrome.cookies.set({
+     url:'https://we.taobao.com/',
+     name: config.checkPlugCookie,
+@@ -16,7 +21,7 @@
+         let apiList = await util.$http('GET',`${moli_host}/spider/config.wb?version=1.0`);
+         console.log('apiList',apiList,apiList.result)
+         //返回到前端
+-        sendResponse({farewell: "I'm contentscript,goodbye!"});
++        sendResponse({farewell: "I'm contentscript,goodbye!dddddddddd"});
+ 
+     }
+ });
+\ No newline at end of file
+Index: popup.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- popup.html	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ popup.html	(revision )
+@@ -13,9 +13,9 @@
+ <div style="margin-top: 10px">
+     <!-- <a class="btn btn-success" target="_blank" href="https://www.alimama.com/member/login.htm?forward=https://www.taobao.com">登录淘宝会员</a> -->
+     <a class="btn btn-success" target="_blank" href="https://we.taobao.com/">登录达人创作平台</a>
+-    <a class="btn btn-success" target="_blank" href="http://pub.alimama.com/myunion.htm">登录阿里妈妈</a>
++    <a class="btn btn-success" target="_blank" id="ck" href="javascript:;">智能回填</a>
+     <div class="alert alert-danger hidden" role="alert">
+-        插件不是最新版本，点击<a href="http://www.baidu.com" target="_blank">此处</a>下载最新插件
++        插件不是最新版本，点击<a href="" target="_blank">此处</a>下载最新插件
+     </div>
+ </div>
+ </div>
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- package.json	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ package.json	(revision )
+@@ -19,7 +19,6 @@
+     "clean-webpack-plugin": "^0.1.19",
+     "copy-webpack-plugin": "^4.5.2",
+     "source-map-loader": "^0.2.1",
+-    "uglify-es-webpack-plugin": "^0.0.2",
+     "webpack": "^4.16.5",
+     "webpack-cli": "^3.1.0",
+     "webpack-merge": "^4.1.0"
+Index: src/eventPage.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/eventPage.js	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ src/eventPage.js	(revision )
+@@ -1,3 +1,3 @@
+ // 入口
+ 
+-import './setPlugCookie'
+\ No newline at end of file
++import './setPlugCookie'
+Index: js/checkPlug.js
+===================================================================
+--- js/checkPlug.js	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ js/content.js	(revision )
+@@ -17,6 +17,6 @@
+         return returnvalue;
+     }
+     if(get_cookie('check-plug-cookie')){
+-         chrome.runtime.sendMessage({cmd: "mycmd"}, function(response) {  console.log(response); });
++         //chrome.runtime.sendMessage({cmd: "mycmd"}, function(response) {  console.log(response); });
+     }
+ })
+\ No newline at end of file
+Index: webpack/local.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- webpack/local.js	(revision bbdeb1fdc9c210eca18aea5315a1994a4f172227)
++++ webpack/local.js	(revision )
+@@ -7,6 +7,6 @@
+     // Enable sourcemaps for debugging webpack's output.
+     // devtool: "source-map",
+ 
+-    watch: false,
++    watch: true,
+ 
+ })
